@@ -25,8 +25,8 @@
 ```
 ├── /library                
 │   └── pkginfo_facts.py     ##<-- python custom module
-├── sol10_pkg.yml            ##<-- ansible playbook example
-└── sol11_pkg.yml            ##<-- ansible playbook example
+├── sol10_pkg.yml            ##<-- ansible playbook example for Solaris 10 release
+└── sol11_pkg.yml            ##<-- ansible playbook example for Solaris 11 release
 ```
 
 #### Requirements :
