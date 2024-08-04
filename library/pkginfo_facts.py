@@ -222,12 +222,13 @@ def pkg11_parse(raw):
             result = {}
         else:
             result = {
-                    param.strip(): value.strip(),
-                }
+                param.strip(): value.strip(),
+            }
 
         results.append(result)
 
     return results
+
 
 def pkg10_parse(raw):
 
@@ -241,12 +242,13 @@ def pkg10_parse(raw):
             result = {}
         else:
             result = {
-                    param.strip(): value.strip(),
+                param.strip(): value.strip(),
                 }
 
         results.append(result)
 
     return results
+
 
 def main():
     module = AnsibleModule(
@@ -302,7 +304,6 @@ def main():
         if bin_path is None:
             raise EnvironmentError(msg='Unable to find any of the supported commands in PATH: {0}'.format(", ".join(sorted(commands_map))))
 
-
         args = commands_map[command]['args']
         rc, stdout, stderr = module.run_command([bin_path] + args)
         if rc == 0:
@@ -313,11 +314,9 @@ def main():
             merged = {}
 
             for pkginfodict in results:
-              for k, v in pkginfodict.items():
+                for k, v in pkginfodict.items():
                     join = {
-
                         k: v,
-
                     }
                     merged.update(join)
 
