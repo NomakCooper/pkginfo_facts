@@ -23,6 +23,17 @@ short_description: Gathers facts about Solaris pkg info attributes for a specifi
 notes:
   - |
     This module shows the list of attributes of Solaris pkg.
+options:
+    pkgname:
+        description:
+            - The pkg name.
+        required: true
+        type: str
+    alias:
+        description:
+            - Pkg alias, a name of your choice which will then be automatically assigned to the dict object name.
+        required: true
+        type: str
 '''
 
 EXAMPLES = r'''
@@ -38,21 +49,21 @@ EXAMPLES = r'''
 
 - name: print sendmail pkg state and version
   debug:
-    msg: "sendmail pkg is {{sendmail_state}}. Version : {{sendmail_version}} " 
+    msg: "sendmail pkg is {{sendmail_state}}. Version : {{sendmail_version}} "
 
 - name: gather facts of SUNWzoneu pkg on Solaris 10
   pkginfo_facts:
     pkgname: "SUNWzoneu"
-    alias: zone    
+    alias: zone
 
 - name: set fact for print
   set_fact:
     zone_status: "{{ ansible_facts.zone_pkg| map(attribute='STATUS') | first }}"
-    zone_version: "{{ ansible_facts.zone_pkg| map(attribute='VERSION') | first }}"    
+    zone_version: "{{ ansible_facts.zone_pkg| map(attribute='VERSION') | first }}"
 
 - name: print SUNWzoneu pkg status and version
   debug:
-    msg: "zone pkg is {{zone_status}}. Version : {{zone_version}} "     
+    msg: "zone pkg is {{zone_status}}. Version : {{zone_version}} "
 '''
 
 RETURN = r'''
@@ -61,7 +72,7 @@ ansible_facts:
   returned: always
   type: complex
   contains:
-    'alias'_pkg:
+    alias_pkg:
       description: A list of attribute of specific Solaris pkg. ( the list name is created from the alias entered as a parameter )
       note: The List attributes depend on the Solaris Major Release.
       returned: always
@@ -96,27 +107,27 @@ ansible_facts:
           description: The pkg base directory.
           returned: if Solaris 10.x
           type: str
-          sample: "/"          
+          sample: "/"
         VERSION:
           description: The pkg version.
           returned: if Solaris 10.x
           type: str
-          sample: "11.10.0,REV=2005.01.21.15.53"           
+          sample: "11.10.0,REV=2005.01.21.15.53"
         HOTLINE:
           description: The pkg hotline
           returned: if Solaris 10.x
           type: str
-          sample: "Please contact your local service provider"             
+          sample: "Please contact your local service provider"
         INSTDATE:
           description: The pkg installation date and time.
           returned: if Solaris 10.x
           type: str
-          sample: "Aug 05 2016 18:57"          
+          sample: "Aug 05 2016 18:57"
         PSTAMP:
           description: The pkg production stamp.
           returned: if Solaris 10.x
           type: str
-          sample: "on10-patch20131219093000"         
+          sample: "on10-patch20131219093000"
         ARCH:
           description: The pkg architecture supported.
           returned: if Solaris 10.x
@@ -136,7 +147,7 @@ ansible_facts:
           description: The pkg summary.
           returned: if Solaris 11.x
           type: str
-          sample: "Sendmail utilities" 
+          sample: "Sendmail utilities"
         Category:
           description: The pkg category.
           returned: if Solaris 11.x
@@ -186,15 +197,14 @@ ansible_facts:
           description: The pkg project contact.
           returned: if Solaris 11.x
           type: str
-          sample: "Sendmail community"     
+          sample: "Sendmail community"
         Project URL:
           description: The pkg project url.
           returned: if Solaris 11.x
           type: str
-          sample: "http://www.sendmail.org/"                                                                                                                                                                                             
+          sample: "http://www.sendmail.org/"
 '''
 
-import re
 import platform
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.basic import AnsibleModule
@@ -214,7 +224,7 @@ def pkg11_parse(raw):
             result = {
                     param.strip(): value.strip(),
                 }
-            
+
         results.append(result)
 
     return results
@@ -233,7 +243,7 @@ def pkg10_parse(raw):
             result = {
                     param.strip(): value.strip(),
                 }
-            
+
         results.append(result)
 
     return results
@@ -292,23 +302,23 @@ def main():
         if bin_path is None:
             raise EnvironmentError(msg='Unable to find any of the supported commands in PATH: {0}'.format(", ".join(sorted(commands_map))))
 
-        
+
         args = commands_map[command]['args']
         rc, stdout, stderr = module.run_command([bin_path] + args)
         if rc == 0:
             parse_func = commands_map[command]['parse_func']
             results = parse_func(stdout)
-            
+
             # time to merge
             merged = {}
 
             for pkginfodict in results:
-              for k, v in pkginfodict.items():                             
+              for k, v in pkginfodict.items():
                     join = {
-                        
+
                         k: v,
 
-                    }                    
+                    }
                     merged.update(join)
 
             result['ansible_facts'][dictname + '_pkg'].append(merged)
