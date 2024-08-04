@@ -176,6 +176,10 @@ ok: [sol11host] => {
 |Project Contact  |string                |The pkg project contact.           |if Solaris 11.x|"Sendmail community"                                                                   |
 |Project URL      |string                |The pkg project url.               |if Solaris 11.x|"http://www.sendmail.org/"                                                             |
 
+## SANITY TEST
+
+* Ansible sanity test is available in [SANITY.md] file
+
 ## Integration
 
 1. Assuming you are in the root folder of your ansible project.
@@ -217,3 +221,4 @@ $ cp path/to/module library
 
 [pkginfo]: https://docs.oracle.com/cd/E19455-01/805-6338/ch4verifypkg-36/index.html
 [pkg]: https://docs.oracle.com/cd/E23824_01/html/821-1451/gkunu.html#:~:text=The%20pkg%20info%20command%20displays,installed%20in%20the%20current%20image.
+[SANITY.md]: SANITY.md
