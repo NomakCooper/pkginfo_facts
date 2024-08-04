@@ -74,7 +74,6 @@ ansible_facts:
   contains:
     alias_pkg:
       description: A list of attribute of specific Solaris pkg. ( the list name is created from the alias entered as a parameter )
-      note: The List attributes depend on the Solaris Major Release.
       returned: always
       type: list
       contains:
@@ -243,7 +242,7 @@ def pkg10_parse(raw):
         else:
             result = {
                 param.strip(): value.strip(),
-                }
+            }
 
         results.append(result)
 
